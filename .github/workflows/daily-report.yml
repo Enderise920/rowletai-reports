@@ -11,7 +11,7 @@ concurrency:
 jobs:
   report:
     if: vars.ROWLET_ENABLED == 'true' && github.event.repository.private == true
-    runs-on: [self-hosted, Windows, ARM64, rowlet-idx]
+    runs-on: [self-hosted, Windows, rowlet-idx]
     timeout-minutes: 150
     env:
       ROWLET_APP_DIR: ${{ vars.ROWLET_APP_DIR }}
