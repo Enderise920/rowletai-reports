@@ -1,0 +1,11 @@
+{
+  ".github/workflows/daily-report.yml": "9fab44577193b9e1fff7f417de12eb3614eaa1ad80f7a3a69d8b06f39c22c5cc",
+  "PANDUAN_GITHUB.md": "96300471e3e8628b303c05e5f6a46a396e771eee2ec976373f5cbc9e498ccf9c",
+  ".gitignore": "ffc3aeb35c34fc40b30894795223b05efc558505005a9391630aed2d67fe3432",
+  "automation/delivery.py": "b6765ce407648126b47f1d38f7b9623778a7654d133c76d1045b32dd056dc7e5",
+  "automation/requirements-viewer.txt": "010c1f5c35e0e55acdba74ac3aefb447d08e06a4623297caa95451cf539425d4",
+  "automation/requirements.txt": "ea8b0b88ee04dbf90ee2090c478763aad4915075882dea7221bed9da7fc58880",
+  "automation/run_daily.py": "36acb7d9b2ebb1f8f6393331282442247bc7263b8f858e41333eafae384c100b",
+  "automation/test_automation.py": "d0304a1931f7c2d2e43336e42ab3d2a8afdfd6fc3a1f0088783c7ac5730b058f",
+  "automation/viewer.py": "45865daf67592ed38045ba400351ed35b93f4a64e8f202e837e1dc4b143a6960"
+}

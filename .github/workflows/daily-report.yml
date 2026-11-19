@@ -1,0 +1,43 @@
+name: IDX daily report
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '15 12,14 * * 1-5' # 19:15 and 21:15 Asia/Jakarta
+permissions:
+  contents: read
+concurrency:
+  group: rowlet-daily-report
+  cancel-in-progress: false
+jobs:
+  report:
+    if: vars.ROWLET_ENABLED == 'true' && github.event.repository.private == true
+    runs-on: [self-hosted, Windows, ARM64, rowlet-idx]
+    timeout-minutes: 150
+    env:
+      ROWLET_APP_DIR: ${{ vars.ROWLET_APP_DIR }}
+      ROWLET_S3_BUCKET: ${{ vars.ROWLET_S3_BUCKET }}
+      ROWLET_S3_ENDPOINT: ${{ vars.ROWLET_S3_ENDPOINT }}
+      ROWLET_S3_PREFIX: ${{ vars.ROWLET_S3_PREFIX }}
+      AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.ROWLET_STORAGE_ACCESS_KEY }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.ROWLET_STORAGE_SECRET_KEY }}
+    steps:
+      # Run only the reviewed, persistent local installation. No PR code execution,
+      # no checkout cleaning, no upload of local caches or Stockbit credentials.
+      - name: Validate installation
+        shell: pwsh
+        run: |
+          if (-not $env:ROWLET_APP_DIR) { throw 'Set ROWLET_APP_DIR first.' }
+          Set-Location -LiteralPath $env:ROWLET_APP_DIR
+          $env:TEMP = (New-Item -ItemType Directory -Force artifacts/job-temp).FullName
+          $env:TMP = $env:TEMP
+          & ./.webvenv/Scripts/python.exe automation/run_daily.py --app-dir $env:ROWLET_APP_DIR --check
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Refresh data and publish report
+        shell: pwsh
+        run: |
+          Set-Location -LiteralPath $env:ROWLET_APP_DIR
+          $env:TEMP = (Resolve-Path artifacts/job-temp).Path
+          $env:TMP = $env:TEMP
+          & ./.webvenv/Scripts/python.exe -u automation/run_daily.py --app-dir $env:ROWLET_APP_DIR
+          exit $LASTEXITCODE
